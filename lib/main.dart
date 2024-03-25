@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:klemina_tebeleva/components/item_list.dart';
+import 'package:klemina_tebeleva/pages/Catalog.dart';
+import 'package:klemina_tebeleva/pages/Comic.dart';
+import 'signup.dart';
 
 final List<String> nameCar = <String>[
   'A',
@@ -13,13 +15,13 @@ final List<String> photoCar = <String>[
   'C'
 ];
 
-
 void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: LoginPage(),
+      //home: SignUpApp(),
     );
   }
 }
@@ -27,6 +29,16 @@ class MyApp extends StatelessWidget {
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
+}
+
+class SignUpApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      //home: LoginPage(),
+      home: SignUpPage(),
+    );
+  }
 }
 
 class _LoginPageState extends State {
@@ -38,22 +50,24 @@ class _LoginPageState extends State {
         child: Stack(
           children: <Widget>[
             Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 33),
-                 child:  Column(
-                 children: <Widget>[
-                 _getHeader(),
-                   _getInputs(),
-        ],
-      ),
-    )
-        ],
-      ),
+              padding: const EdgeInsets.symmetric(horizontal: 33),
+              child:  Column(
+                children: <Widget>[
+                  _getHeader(),
+                  _getInputs(),
+                  _getSignIn(context),
+                  _getBottomRow(context),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 }
 
-  _getHeader(){
+_getHeader(){
   return Expanded(
     flex: 2,
     child: Container(
@@ -61,10 +75,10 @@ class _LoginPageState extends State {
       child: Text(
         'Добро пожаловать!',
         style: TextStyle(color: Colors.white,
-      fontStyle: FontStyle.italic,
-      fontSize: 37
+            fontStyle: FontStyle.italic,
+            fontSize: 37
         ),
-    ),
+      ),
     ),
   );
 }
@@ -92,22 +106,55 @@ _getInputs(){
   );
 }
 
-_getSignIn(){
-  Expanded(
+_getSignIn(context){
+  return Expanded(
     flex: 1,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget> [
-        Text('Вход', style: TextStyle(fontSize: 25,fontWeight: FontWeight.w500),),
-        CircleAvatar(
-          backgroundColor: Colors.red.shade800,
-          radius: 30,
-          child: Icon(Icons.arrow_forward_ios, color: Colors.white,),
+        GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => ComicsCatalog()));
+            }, //фигура как переход
+            child: CircleAvatar(
+              backgroundColor: Colors.red.shade800,
+              radius: 30,
+              child: Icon(Icons.arrow_forward_ios, color: Colors.white,),
+            )
         )
       ],
     ),
-  )
+  );
 }
+
+_getBottomRow(context) {
+  return Expanded(
+    flex: 2,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => SignUpPage()));
+          },
+          child: Text('Регистрация', style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              decoration: TextDecoration.underline),
+          ),
+        ),
+        Text('Забыл пароль', style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+            decoration: TextDecoration.underline),
+        ),
+      ],
+    ),
+  );
+}
+
 class BackgroundSignIn extends CustomPainter{
   @override
   void paint(Canvas canvas, Size size){
@@ -119,14 +166,16 @@ class BackgroundSignIn extends CustomPainter{
     mainBackground.addRect(Rect.fromLTRB(0,0, sw, sh));
     paint.color = Colors.grey.shade100;
     canvas.drawPath(mainBackground, paint);
+
     //фигура синяя
     Path blueWawe = Path();
-      blueWawe.lineTo(sw,0);
-      blueWawe.lineTo(sw,sh*0.5);
-      blueWawe.quadraticBezierTo(sw*0.5,sh*0.45,sw* 0.2, 0);
-      blueWawe.close();
-      paint.color = Colors.blue.shade800;
-      canvas.drawPath(blueWawe, paint);
+    blueWawe.lineTo(sw,0);
+    blueWawe.lineTo(sw,sh*0.5);
+    blueWawe.quadraticBezierTo(sw*0.5,sh*0.45,sw* 0.2, 0);
+    blueWawe.close();
+    paint.color = Colors.blue.shade800;
+    canvas.drawPath(blueWawe, paint);
+
     //фигура красная
     Path RedWawe = Path();
     RedWawe.lineTo(sw,0);
@@ -144,4 +193,101 @@ class BackgroundSignIn extends CustomPainter{
 
   }
 
+}
+
+class ComicsCatalog extends StatelessWidget {
+  final List<Comic> _comics = [
+    Comic(
+      title: 'Удивительный Человек-Паук #300. Первое появление Венома',
+      description: 'Легендарный юбилейный выпуск! Когда-то Питер Паркер привез с другой планеты удивительный костюм-симбиот, способный принимать любые формы и наделяющий носителя невероятной силой. Но все плюсы перевесил один жирный минус: симбиот попытался слиться с Человеком-пауком и захватить его сознание! Герою с трудом удалось избавиться от инопланетного костюма и вернуться к своей обычной жизни. Но теперь пришельца ведёт ненависть и он нашёл того, кто желает смерти Питеру Паркеру почти так же сильно... Узрите, скоро родится Веном!',
+      price: '300',
+      images: ['https://ir.ozone.ru/s3/multimedia-f/wc1000/6397084731.jpg'],
+    ),
+    Comic(
+      title: 'MARVEL: Что если?.. Росомаха стал королём вампиров',
+      description: 'Парад безумия в классических выпусках «Что, если?» продолжается! На этот раз вам посчастливится попасть в альтернативную вселенную, где в битве Людей Икс с небезызвестным графом Дракулой Росомаха неволей стал преемником трона короля вампиров. Неуязвимый мутант-вампир — что может быть ужаснее?! Узнаете!',
+      price: '300',
+      images: ['https://ir.ozone.ru/s3/multimedia-5/wc1000/6272959277.jpg'],
+    ),
+    Comic(
+      title: 'Встречайте: Скруллы!',
+      description: 'Кому можно верить? Уорнеры — типичная семейка. Отец работает в Старк Энтерпрайзес. Мать — в аппарате сенатора. Девочки учатся в средней школе Стэмфорда. Однако есть в них кое-что уникальное: они... скруллы! Пришельцы-перевёртыши, которые внедрились в наше общество, чтобы проложить дорогу завоевателям! Ведомая долгом, Мэдисон Уорнер отправляется в одно из опаснейших мест: на пижамную вечеринку! Тем временем отец семейства Карл встречается с Железным Человеком. Обычный денёк семьи Уорнеров. Но что может разрушить семейные узы и раскрыть личности героев? Загадочный человек в шляпе принесёт им смерть... или избавление? И что же такое проект “Цветение”? Окунитесь в историю, о которой все будут говорить ещё долгие годы, и взгляните на скруллов по-новому!',
+      price: '300',
+      images: ['https://ir.ozone.ru/s3/multimedia-8/wc1000/6626044448.jpg'],
+    ),
+  ];
+
+  int _selectedComicIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Каталог комиксов', style: TextStyle(color: Colors.black)),
+      ),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            height: 150,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: _comics.length,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ComicPage(_comics[index])));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Image.network(
+                            _comics[index].images[0],
+                            width: 100,
+                            height: 120,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text(_comics[index].title),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _comics.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(_comics[index].title),
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.deepPurple,
+                    child: ClipOval(
+                      child: Image.network(
+                        _comics[index].images[0],
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ComicPage(_comics[index])));
+                  },
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
