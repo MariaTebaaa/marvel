@@ -3,18 +3,6 @@ import 'package:klemina_tebeleva/pages/Catalog.dart';
 import 'package:klemina_tebeleva/pages/Comic.dart';
 import 'signup.dart';
 
-final List<String> nameCar = <String>[
-  'A',
-  'B',
-  'C'
-];
-
-final List<String> photoCar = <String>[
-  'A',
-  'B',
-  'C'
-];
-
 void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
@@ -187,6 +175,9 @@ class BackgroundSignIn extends CustomPainter{
     canvas.drawPath(RedWawe, paint);
 
   }
+
+
+
   @override
   bool shouldRepaint(CustomPainter oldDelegate){
     return oldDelegate != this;
@@ -201,13 +192,13 @@ class ComicsCatalog extends StatelessWidget {
       title: 'Удивительный Человек-Паук #300. Первое появление Венома',
       description: 'Легендарный юбилейный выпуск! Когда-то Питер Паркер привез с другой планеты удивительный костюм-симбиот, способный принимать любые формы и наделяющий носителя невероятной силой. Но все плюсы перевесил один жирный минус: симбиот попытался слиться с Человеком-пауком и захватить его сознание! Герою с трудом удалось избавиться от инопланетного костюма и вернуться к своей обычной жизни. Но теперь пришельца ведёт ненависть и он нашёл того, кто желает смерти Питеру Паркеру почти так же сильно... Узрите, скоро родится Веном!',
       price: '300',
-      images: ['https://ir.ozone.ru/s3/multimedia-f/wc1000/6397084731.jpg'],
+      images: ['https://ir.ozone.ru/s3/multimedia-f/wc1000/6397084731.jpg', 'https://ir.ozone.ru/s3/multimedia-0/wc1000/6643412928.jpg', 'https://ir.ozone.ru/s3/multimedia-k/wc1000/6643412984.jpg', 'https://ir.ozone.ru/s3/multimedia-l/wc1000/6643412985.jpg'],
     ),
     Comic(
       title: 'MARVEL: Что если?.. Росомаха стал королём вампиров',
       description: 'Парад безумия в классических выпусках «Что, если?» продолжается! На этот раз вам посчастливится попасть в альтернативную вселенную, где в битве Людей Икс с небезызвестным графом Дракулой Росомаха неволей стал преемником трона короля вампиров. Неуязвимый мутант-вампир — что может быть ужаснее?! Узнаете!',
       price: '300',
-      images: ['https://ir.ozone.ru/s3/multimedia-5/wc1000/6272959277.jpg'],
+      images: ['https://ir.ozone.ru/s3/multimedia-5/wc1000/6272959277.jpg', 'https://ir.ozone.ru/s3/multimedia-x/wc1000/6643404861.jpg', 'https://ir.ozone.ru/s3/multimedia-5/wc1000/6643404941.jpg','https://ir.ozone.ru/s3/multimedia-x/wc1000/6643404897.jpg'],
     ),
     Comic(
       title: 'Встречайте: Скруллы!',
@@ -215,9 +206,44 @@ class ComicsCatalog extends StatelessWidget {
       price: '300',
       images: ['https://ir.ozone.ru/s3/multimedia-8/wc1000/6626044448.jpg'],
     ),
+    Comic(
+      title: 'Человек-Паук - Нападение Чёрной Кошки',
+      description: 'Человек-Паук оказывается в центре войны банд в Нью-Йорке. Он противостоит таким противникам как Кувалда и Маджи, но неожиданное появление его прежней возлюбленной, Фелиции Харди, также известной как Чёрная Кошка, переворачивает мир с ног на голову! Какой же секрет скрывает Чёрная Кошка?',
+      price: '300',
+      images: ['https://img.drawnstories.ru/img/Marvel-Comics/Spider-Man/Limited-series/the-black-cat-strikes/the-black-cat-strikes-l.jpg'],
+    ),
+    Comic(
+      title: 'Комикс Темная власть: Мисс Марвел',
+      images: ['https://img.drawnstories.ru/img/Marvel-Comics/dark-reign/Miss-Marvel/Miss-Marvel-l.jpg'],
+      description: 'Это эволюция мисс Марвел по мере того, как мантия переходит от одной героини к другой! Кэрол Дэнверс много лет сражалась в роли мисс Марвел, черпая вдохновение и имя у героя кри Мар-Велла, известного большей части Земли как Капитан Марвел. Но с приходом к власти бывшего суперзлодея Нормана Осборна, который взял под свой контроль "Мстителей", Дэнверс запрещено не только носить ее костюм, но даже использовать имя мисс Марвел.',
+      price: '300',
+    ),
   ];
 
   int _selectedComicIndex = 0;
+
+  List<Map<String, String>> favoriteComics = [];
+  List<Map<String, String>> cartComics = [];
+
+  void addToFavorites(_comics, int index) {
+    setState( {
+      favoriteComics.add(_comics[index])
+    });
+  }
+
+  void addToCart(_comics, int index) {
+    setState( {
+    cartComics.add(_comics[index])
+    });
+  }
+
+  void navigateToFavorites(context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => FavoritesPage(favoriteComics: favoriteComics)));
+  }
+
+  void navigateToCart(context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => CartPage(cartComics: cartComics)));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -265,7 +291,7 @@ class ComicsCatalog extends StatelessWidget {
           Expanded(
             child: ListView.builder(
               itemCount: _comics.length,
-              itemBuilder: (context, index) {
+              itemBuilder: (context, int index) {
                 return ListTile(
                   title: Text(_comics[index].title),
                   leading: CircleAvatar(
@@ -286,7 +312,96 @@ class ComicsCatalog extends StatelessWidget {
               },
             ),
           ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _comics.length,
+              itemBuilder: (context,int index) {
+                return ListTile(
+                  title: Text(_comics[index].title),
+                  leading: Image.network(_comics[index].images[index]),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.favorite),
+                        onPressed:() {
+                          addToFavorites(index);
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.shopping_cart),
+                        onPressed: () {
+                          addToCart(index);
+                        },
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ComicPage(_comics[index])));
+                  },
+                );
+              },
+            ),
+          ),
+          ElevatedButton(
+            onPressed: navigateToFavorites,
+            child: Text('Избранное'),
+          ),
+          ElevatedButton(
+            onPressed: navigateToCart,
+            child: Text('Корзина'),
+          ),
         ],
+      ),
+    );
+  }
+
+  void setState(Set<void> set) {}
+}
+
+class FavoritesPage extends StatelessWidget {
+  final List<Map<String, String>> favoriteComics;
+
+  FavoritesPage({required this.favoriteComics});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Избранное'),
+      ),
+      body: ListView.builder(
+        itemCount: favoriteComics.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(favoriteComics[index]['title']!),
+            trailing: Icon(Icons.favorite),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class CartPage extends StatelessWidget {
+  final List<Map<String, String>> cartComics;
+
+  CartPage({required this.cartComics});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Корзина'),
+      ),
+      body: ListView.builder(
+        itemCount: cartComics.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(cartComics[index]['title']!),
+            trailing: Icon(Icons.shopping_cart),
+          );
+        },
       ),
     );
   }
